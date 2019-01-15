@@ -173,9 +173,9 @@ class EngimaMachine:
 		self.rotorTwoAlpha = rotors[self.rotorNums[1]]
 		self.rotorThreeAlpha = rotors[self.rotorNums[2]]
 
-		self.rotorOneAlpha.rotate(self.rotorOnePos)
-		self.rotorTwoAlpha.rotate(self.rotorTwoPos)
-		self.rotorThreeAlpha.rotate(self.rotorThreePos)
+		self.rotorOneAlpha = self.rotorOneAlpha[n:] + self.rotorOneAlpha[:n]
+		self.rotorTwoAlpha = self.rotorOneAlpha[n:] + self.rotorOneAlpha[:n]
+		self.rotorThreeAlpha = self.rotorOneAlpha[n:] + self.rotorOneAlpha[:n]
 
 		print(self.rotorOneAlpha + "||" + self.rotorNums + "||" + self.rotorOnePos)
 
