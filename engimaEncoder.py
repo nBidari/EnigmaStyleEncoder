@@ -2,43 +2,25 @@
 # Consulted by Justin Lee Janruary 13th 2019
 
 import tkinter as tk
-import threading
+from collections import deque
 
 alphabet = "ABCDEFGHIJKMNOPQRSTUVWXYZ"
 
-class Rotor:
-	
-	def __init__(self,numRotorOne, numRotorTwo, numRotorThree,rotorOne, rotorTwo,rotorThree, rotorFour, posOne, posTwo, posThree):
-		self.numRotorOne = numRotorOne
-		self.numRotorTwo = numRotorTwo
-		self.numRotorThree = numRotorThree
+rotors = [["P","E","Z","U","O","H","X","S","C","V","F","M","T","B","G","L","R","I","N","Q","J","W","A","Y","D","K"], 
+		  ["Z","O","U","E","S","Y","D","K","F","W","P","C","I","Q","X","H","M","V","B","L","G","N","J","R","A","T"], 
+		  ["E","H","R","V","X","G","A","O","B","Q","U","S","I","M","Z","F","L","Y","N","W","K","T","P","D","J","C"],
+		  ["I","M","E","T","C","G","F","R","A","Y","S","Q","B","Z","X","W","L","H","K","D","V","U","P","O","J","N"],
+		  ["Q","W","E","R","T","Z","U","I","O","A","S","D","F","G","H","J","K","P","Y","X","C","V","B","N","M","L"]
+		 ]
 
-		self.numrotorOneRotate = 0
-		self.numrotorTwoRotate = 0
-		self.numrotorThreeRotate = 0
+rotorOneShift = 0
+rotorTwoShift = 0
+rotorThreeShift = 0
 
-		self.rotorOne = "JGDQOXUSCAMIFRVTPNEWKBLZYH"
-		self.rotorTwo = "NTZPSFBOKMWRCJDIVLAEYUXHGQ"
-		self.rotorThree = "JVIUBHTCDYAKEQZPOSGXNRMWFL"
-		self.rotorFour = "QYHOGNECVPUZTFDJAXWMKISRBL"
-		self.rotorFive = "QWERTZUIOASDFGHJKPYXCVBNML"
-
-		self.posOne = posOne
-		self.posTwo = posTwo
-		self.posThree = posThree
-
-	def rotorEncode:
-		print("Encode")
-	def rotorSpin:
-		print("Spin")
-
-class Plugboard:
-	pass
-
-class UserInterface:
+class EngimaMachine:
 
 	def __init__(self):
-		#self.output = outputStr
+		self.outputStr = ""
 
 		self.root = tk.Tk()
 		self.root.title("Enigma-Esque Encoding Machine")
@@ -140,7 +122,7 @@ class UserInterface:
 		self.inputEnt.config(highlightbackground = "#074C0A")
 		self.inputEnt.grid(row = 0, column = 1, rowspan = 3, sticky = 'NESW', padx = 10, pady = 5)
 
-		self.submitbtn = tk.Button(self.root, text = "Encode", width = 25, height = 2)
+		self.submitbtn = tk.Button(self.root, text = "Encode", width = 25, height = 2, command = self.submit)
 		self.submitbtn.config(background = "#DADFDF", relief = "raised", highlightbackground = "#374140")
 		self.submitbtn.grid(row = 4, column = 1, sticky = 'NESW',padx = 10, pady = 5)
 
@@ -153,7 +135,96 @@ class UserInterface:
 
 		self.root.mainloop()
 
-mainPage = UserInterface()
+	#------------------------------------------------------------------------------------------------------------------------------------------------
+	def rotorEncode(self, encodeChar, rotorModNum, rotorPos):
+		self.encodeChar = encodeChar
+		self.rotorModNum = rotorModNum
+		self.rotorPos = rotorPos
 
-print(Rotor.rotorOne)
+		for i in range(len(alphabet)):
+			if alphabet[i] == self.encodeChar:
+				pass
+			else:
+				pass
+		
+	#------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+	#------------------------------------------------------------------------------------------------------------------------------------------------
+	def plugEncode(self):
+		pass
+	#------------------------------------------------------------------------------------------------------------------------------------------------
+
+	#------------------------------------------------------------------------------------------------------------------------------------------------
+	def shiftFnc(self):
+		pass
+	#------------------------------------------------------------------------------------------------------------------------------------------------
+
+	#------------------------------------------------------------------------------------------------------------------------------------------------
+	def msgEncode(self):
+		#Rotor INIT
+		self.rotorOnePos = self.posOneSpin.get()
+		self.rotorTwoPos = self.posTwoSpin.get()
+		self.rotorThreePos = self.posThreeSpin.get()
+
+		self.rotorNums = [int(self.rotorOneSpin.get()), int(self.rotorTwoSpin.get()), int(self.rotorThreeSpin.get())]
+
+		self.rotorOneAlpha = rotors[self.rotorNums[0]]
+		self.rotorTwoAlpha = rotors[self.rotorNums[1]]
+		self.rotorThreeAlpha = rotors[self.rotorNums[2]]
+
+		self.rotorOneAlpha.rotate(self.rotorOnePos)
+		self.rotorTwoAlpha.rotate(self.rotorTwoPos)
+		self.rotorThreeAlpha.rotate(self.rotorThreePos)
+
+		print(self.rotorOneAlpha + "||" + self.rotorNums + "||" + self.rotorOnePos)
+
+		for i in range(len(self.inputStr)):
+			#Take Input
+			input = self.inputStr[i]
+
+
+			#Rotor1 Encode
+			self.rotorEncode(input)
+
+			#Shift
+			self.shiftFnc()
+
+			#Rotor2 Encode
+
+			#Shift
+			self.shiftFnc()
+
+			#Rotor3 Encode
+
+			#Shift
+			self.shiftFnc()
+
+			#Plugboard Encode
+
+			#Output
+
+		pass
+	#------------------------------------------------------------------------------------------------------------------------------------------------
+
+	def submit(self):
+		self.inputStr = self.inputEnt.get('1.0',tk.END)
+
+		self.msgEncode()
+
+		try:
+			self.outputEnt.delete("1.0", tk.END)
+			self.outputEnt.update()
+
+			self.outputEnt.insert(tk.INSERT, self.outputStr)
+
+		except ValueError:
+			self.outputEnt.delete("1.0", tk.END)
+			self.outputEnt.update()
+
+			self.outputEnt.insert(tk.INSERT, "INVALID INPUT, ONLY ENGLISH ALPHABET LETTERS (NO NUMBERS, SPECIAL CHARACTERS, COMMA'S ETC.")
+
+
+mainPage = EngimaMachine()
+
 
